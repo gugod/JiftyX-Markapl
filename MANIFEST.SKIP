@@ -19,3 +19,5 @@
 ^[^/]+\.pl$
 ^\.shipit$
 ^\.gitignore$
+examples/Oreo/oreo
+examples/Oreo/var
