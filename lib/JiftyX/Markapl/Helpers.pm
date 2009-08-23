@@ -12,7 +12,8 @@ use base qw/Exporter/;
 
 our @EXPORT = qw(hyperlink tangent redirect new_action form_submit
     form_return form_next_page request render_param render_hidden
-    render_action render_region current_user);
+    render_action render_region current_user
+    get set );
 
 sub current_user { Jifty->web->current_user }
 
@@ -47,8 +48,9 @@ sub render_action(@) {
 
     my @f = ($fields && ref ($fields) eq 'ARRAY') ? @$fields : $action->argument_names;
     foreach my $argument (@f) {
-        outs_raw( $action->form_field( $argument, %$field_args ) );
+        outs_raw( $action->form_field( $argument, %$field_args )->render );
     }
+    '';
 }
 
 sub form_submit(@) {
@@ -73,6 +75,8 @@ sub render_region(@) {
     Jifty::Web::PageRegion->new(%$args)->render;
 }
 
+sub js_handlers(@) {}
+
 {
     no warnings qw/redefine/;
     sub form (&) {
@@ -82,8 +86,35 @@ sub render_region(@) {
         outs_raw( Jifty->web->form->end );
         return '';
     }
+
+    sub get {
+        if (wantarray) {
+            map { _get_single($_) } @_;
+        } else {
+            _get_single($_[0]);
+        }
+    }
+
+    sub _get_single {
+        my $v = request->template_argument($_[0]) || request->argument( $_[0] );
+        return $v if defined $v;
+
+        if (request->top_request ne request() and $v = request->top_request->template_argument($_[0])) {
+            if (ref $v) {
+                warn("The template argument '$_[0]' was not explicitly passed to the current region ('@{[request->path]}'), and thus will not work if the region is ever refreshed.  Unfortunately, it is a reference, so it can't be passed explicitly either.  You'll need to explicitly pass some stringification of what it is to the region.".Carp::longmess);
+            } else {
+                warn("The template argument '$_[0]' was not explicitly passed to the the current region ('@{[request->path]}'), and thus will not work if the region is ever refreshed.  Try passing it explicitly?");
+            }
+        }
+        return undef;
+    }
+
+    sub set {
+        while ( my ( $arg, $val ) = splice(@_, 0, 2) ) {
+            request->template_argument( $arg => $val );
+        }
+    }
 }
 
-sub js_handlers(@) {}
 
 1;
