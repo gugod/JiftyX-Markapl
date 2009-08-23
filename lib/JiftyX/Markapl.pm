@@ -9,21 +9,51 @@ __END__
 
 =head1 NAME
 
-JiftyX::Markapl -
-
-=head1 SYNOPSIS
-
-  use JiftyX::Markapl;
+JiftyX::Markapl - A Jifty extension to let you use Markapl for templating
 
 =head1 DESCRIPTION
 
-JiftyX::Markapl is
+JiftyX::Markapl is an implementation of using Markapl in Jifty.
+
+So far it requires several configuration steps to do this.
+
+Edit C<etc/config.yml>. Add "Markapl" in to the list of framework
+plugins, and add C<JiftyX::Markapl::Handler> in to the view handlers,
+remove the Template-Declare and Mason Handlers from the list.
+
+    framework:
+      Plugins:
+        - Markapl: {}
+
+      TemplateClass: MyApp::View
+      View:
+        Handlers:
+          - Jifty::View::Static::Handler
+          - JiftyX::Markapl::Handler
+
+Verify that you still have 'TemplateClass' with value C<MyApp::View>
+
+Then, edit your C<MyApp/View.pm>:
+
+    package MyApp::View;
+    use Markapl;
+    use JiftyX::Markapl::Helpers;
+
+    template '/' => sub {
+        h1("#heading") { "Hello, MyApp" };
+    };
+
+Then you should be able to visit "/' and see the hello.
+
+For a fully working example, see example/Oreo dir.
 
 =head1 AUTHOR
 
 Kang-min Liu E<lt>gugod@gugod.orgE<gt>
 
 =head1 SEE ALSO
+
+L<Markapl>
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -57,4 +87,3 @@ SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
 
 =cut
-
