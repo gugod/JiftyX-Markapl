@@ -21,3 +21,5 @@
 ^\.gitignore$
 examples/Oreo/oreo
 examples/Oreo/var
+^t/TestSimple/testsimplettestsimplet.*$
+^t/TestSimple/t/mailbox_ttestsimplet.*$
