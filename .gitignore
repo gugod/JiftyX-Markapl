@@ -10,3 +10,5 @@ Makefile.old
 examples/Oreo/oreo
 examples/Oreo/var
 MANIFEST.bak
+t/TestSimple/testsimplettestsimplet*
+t/TestSimple/t/mailbox_ttestsimplet*
