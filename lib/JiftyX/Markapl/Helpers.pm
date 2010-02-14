@@ -106,7 +106,6 @@ sub js_handlers(@) {}
                 warn("The template argument '$_[0]' was not explicitly passed to the the current region ('@{[request->path]}'), and thus will not work if the region is ever refreshed.  Try passing it explicitly?");
             }
         }
-        return undef;
     }
 
     sub set {
