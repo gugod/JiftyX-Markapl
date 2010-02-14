@@ -45,7 +45,7 @@ Then, edit your C<MyApp/View.pm>:
 
 Then you should be able to visit "/' and see the hello.
 
-For a fully working example, see example/Oreo dir.
+For a fully working example, see example/Oreo directory.
 
 =head1 AUTHOR
 
